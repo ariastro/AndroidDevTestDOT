@@ -36,13 +36,13 @@ val fixedDateFormat = "dd MMMM yyyy"
 val timeStampFormat = "yyyy-MM-dd"
 
 fun Context.showToast(message: String){
-    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    Toast.makeText(this, message, Toast.LENGTH_LONG).show()
 }
 
-private fun isInternetAvailable(context: Context): Boolean {
+fun Context.isInternetAvailable(): Boolean {
     var result = false
     val connectivityManager =
-        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
         val networkCapabilities = connectivityManager.activeNetwork ?: return false
         val actNw =

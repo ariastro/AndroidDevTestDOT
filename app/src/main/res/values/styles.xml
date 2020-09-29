@@ -7,8 +7,8 @@
 		<item name="colorAccent">@color/colorAccent</item>
 	</style>
 
-	<style name="AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar"/>
-
-	<style name="PopupOverlay" parent="ThemeOverlay.MaterialComponents.Light"/>
+	<style name="AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar">
+		<item name="android:fontFamily">@font/poppins</item>
+	</style>
 
 </resources>
