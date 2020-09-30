@@ -8,12 +8,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.astronout.androidtestdot.R
 import com.astronout.androidtestdot.databinding.ItemUserBinding
-import com.astronout.androidtestdot.databinding.LayoutProgressDialogBinding
 import com.astronout.androidtestdot.users.model.GetUsersModel
-import com.astronout.androidtestdot.utils.State
 import com.astronout.androidtestdot.utils.glide.GlideApp
 import com.bumptech.glide.GenericTransitionOptions
-import java.util.*
 
 class GetUsersAdapter(private val context: Context, private val onClickListener: OnClickListener) : PagedListAdapter<GetUsersModel, GetUsersAdapter.GetUsersViewHolder>(DiffCallback) {
 
