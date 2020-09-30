@@ -11,17 +11,16 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.astronout.androidtestdot.R
+import com.astronout.androidtestdot.baseview.BaseActivity
 import com.astronout.androidtestdot.databinding.ActivityPostsBinding
 import com.astronout.androidtestdot.posts.adapter.GetPostsAdapter
+import com.astronout.androidtestdot.posts.model.GetPostsModel
 import com.astronout.androidtestdot.posts.viewmodel.PostsViewModel
+import com.astronout.androidtestdot.utils.*
 import com.astronout.androidtestdot.utils.glide.GlideApp
-import com.astronout.androidtestdot.utils.gone
-import com.astronout.androidtestdot.utils.isInternetAvailable
-import com.astronout.androidtestdot.utils.noInternetConnectionAlert
-import com.astronout.androidtestdot.utils.visible
 import com.bumptech.glide.GenericTransitionOptions
 
-class PostsActivity : AppCompatActivity() {
+class PostsActivity : BaseActivity() {
 
     private lateinit var binding: ActivityPostsBinding
     private lateinit var viewModel: PostsViewModel
@@ -44,6 +43,7 @@ class PostsActivity : AppCompatActivity() {
         checkInternetConnectionAndGetData()
         setupSwipeRefreshLayout()
         observeLiveData()
+        initState()
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -68,26 +68,8 @@ class PostsActivity : AppCompatActivity() {
 
     private fun observeLiveData() {
         viewModel.getPosts().observe(this, Observer {
-            // delay one second to get the right size
-            Handler().postDelayed({
-                updateUI(it.size)
-            }, 1000)
             adapter = GetPostsAdapter(this, GetPostsAdapter.OnClickListener { getPostModel, image ->
-                val window = PopupWindow(this)
-                val popupView = layoutInflater.inflate(R.layout.layout_popup, null)
-                window.contentView = popupView
-                val popupImage = popupView.findViewById<AppCompatImageView>(R.id.popup_image)
-                val popupTitle = popupView.findViewById<AppCompatTextView>(R.id.popup_title)
-                val popupBody = popupView.findViewById<AppCompatTextView>(R.id.popup_body)
-                val popupClose = popupView.findViewById<AppCompatImageView>(R.id.popup_close)
-                GlideApp.with(this)
-                    .load(image)
-                    .transition(GenericTransitionOptions.with(android.R.anim.fade_in))
-                    .into(popupImage)
-                popupTitle.text = getPostModel.title
-                popupBody.text = getPostModel.body
-                popupClose.setOnClickListener { window.dismiss() }
-                window.showAtLocation(popupView, Gravity.CENTER, 0, 0)
+                showPopup(getPostModel, image)
             })
             adapter.submitList(it)
             binding.rvPosts.adapter = adapter
@@ -97,8 +79,26 @@ class PostsActivity : AppCompatActivity() {
         })
     }
 
-    private fun updateUI(itemCount: Int) {
-        if (itemCount == 0) {
+    private fun showPopup(getPostsModel: GetPostsModel, image: Int) {
+        val window = PopupWindow(this)
+        val popupView = layoutInflater.inflate(R.layout.layout_popup, null)
+        window.contentView = popupView
+        val popupImage = popupView.findViewById<AppCompatImageView>(R.id.popup_image)
+        val popupTitle = popupView.findViewById<AppCompatTextView>(R.id.popup_title)
+        val popupBody = popupView.findViewById<AppCompatTextView>(R.id.popup_body)
+        val popupClose = popupView.findViewById<AppCompatImageView>(R.id.popup_close)
+        GlideApp.with(this)
+            .load(image)
+            .transition(GenericTransitionOptions.with(android.R.anim.fade_in))
+            .into(popupImage)
+        popupTitle.text = getPostsModel.title
+        popupBody.text = getPostsModel.body
+        popupClose.setOnClickListener { window.dismiss() }
+        window.showAtLocation(popupView, Gravity.CENTER, 0, 0)
+    }
+
+    private fun updateUI() {
+        if (viewModel.listIsEmpty()) {
             binding.rvPosts.visibility = gone()
             binding.tvNoData.visibility = visible()
         } else {
@@ -110,6 +110,17 @@ class PostsActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
+    }
+
+    private fun initState() {
+        viewModel.getState().observe(this, Observer { state ->
+            if (viewModel.listIsEmpty() && state == State.LOADING) {
+                progress.show()
+            } else {
+                progress.dismiss()
+            }
+            updateUI()
+        })
     }
 
 }

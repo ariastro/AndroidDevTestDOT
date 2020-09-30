@@ -11,6 +11,7 @@ import androidx.paging.PagedList
 import com.astronout.androidtestdot.network.repositories.UsersDataSource
 import com.astronout.androidtestdot.network.repositories.UsersDataSourceFactory
 import com.astronout.androidtestdot.users.model.GetUsersModel
+import com.astronout.androidtestdot.utils.State
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -20,10 +21,17 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     init {
         val config = PagedList.Config.Builder()
-            .setPageSize(78)
+            .setPageSize(5)
             .setEnablePlaceholders(false)
             .build()
         usersLiveData = LivePagedListBuilder<Int, GetUsersModel>(dataSourceFactory, config).build()
+    }
+
+    fun getState(): LiveData<State> = Transformations.switchMap<UsersDataSource,
+            State>(dataSourceFactory.usersDataSourceLiveData, UsersDataSource::state)
+
+    fun listIsEmpty(): Boolean {
+        return usersLiveData.value?.isEmpty() ?: true
     }
 
     fun getUsers() = usersLiveData

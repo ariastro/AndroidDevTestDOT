@@ -33,6 +33,7 @@ class MainActivity : BaseActivity() {
         checkInternetConnection()
         setupSwipeRefreshLayout()
         observeLiveData()
+        initState()
 
     }
 
@@ -64,6 +65,16 @@ class MainActivity : BaseActivity() {
             binding.rvUsers.adapter = adapter
             if (binding.swipeRefreshLayout.isRefreshing) {
                 binding.swipeRefreshLayout.isRefreshing = false
+            }
+        })
+    }
+
+    private fun initState() {
+        viewModel.getState().observe(this, Observer { state ->
+            if (viewModel.listIsEmpty() && state == State.LOADING) {
+                progress.show()
+            } else {
+                progress.dismiss()
             }
         })
     }
