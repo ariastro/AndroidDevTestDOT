@@ -21,7 +21,7 @@ Sebuah sekolah swasta SMA Pasti Pintar sedang mengembangkan aplikasi mobile untu
 - [x] (Must have) List photo ditampilkan dalam bentuk thumbnail dan grid dengan model 3 data ke samping.
 - [x] (Must have) Paginasi berupa infinite scroll
 - [x] (Nice to have) Untuk UX yang lebih bagus saat loading gambar, container gambar harus berisi gambar default yang kemudian akan ganti menjadi gambar aslinya setelah loading gambar selesai 
-- [ ] (must have) Jika photo dipilih maka akan menampilkan popup foto dan judul foto
+- [x] (must have) Jika photo dipilih maka akan menampilkan popup foto dan judul foto
 
 4. Koneksi Internet
 - [x] (Must have) Jika tidak ada koneksi internet, ada pemberitahuan jika internet tidak tersambung
