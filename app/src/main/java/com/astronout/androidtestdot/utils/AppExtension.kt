@@ -20,20 +20,11 @@ fun logDebug(message: String) {
         Log.d(Constants.TAG_DEBUG, message)
 }
 
-/**
- * Log Error Message Locally and Send to Error Reporting Server
- */
 fun logError( message: String, throwable : Throwable? = null) {
     if (BuildConfig.DEBUG) {
-//        DEBUG VERSION
-//        LOG LOCALLY
         Log.e(Constants.TAG_ERROR, message)
     }
 }
-
-val dateTimeHoursFormat = "yyyy-MM-dd HH:mm:ss"
-val fixedDateFormat = "dd MMMM yyyy"
-val timeStampFormat = "yyyy-MM-dd"
 
 fun Context.showToast(message: String){
     Toast.makeText(this, message, Toast.LENGTH_LONG).show()
