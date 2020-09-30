@@ -3,6 +3,7 @@ package com.astronout.androidtestdot.posts.model
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import androidx.annotation.Keep
+import com.astronout.androidtestdot.R
 import kotlinx.android.parcel.Parcelize
 
 @Keep

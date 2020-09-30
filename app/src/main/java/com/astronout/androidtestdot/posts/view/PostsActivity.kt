@@ -1,19 +1,25 @@
 package com.astronout.androidtestdot.posts.view
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.view.Gravity
+import android.widget.PopupWindow
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatImageView
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
 import com.astronout.androidtestdot.R
 import com.astronout.androidtestdot.databinding.ActivityPostsBinding
 import com.astronout.androidtestdot.posts.adapter.GetPostsAdapter
 import com.astronout.androidtestdot.posts.viewmodel.PostsViewModel
-import com.astronout.androidtestdot.users.adapter.GetUsersAdapter
-import com.astronout.androidtestdot.utils.*
+import com.astronout.androidtestdot.utils.glide.GlideApp
+import com.astronout.androidtestdot.utils.gone
+import com.astronout.androidtestdot.utils.isInternetAvailable
+import com.astronout.androidtestdot.utils.noInternetConnectionAlert
+import com.astronout.androidtestdot.utils.visible
+import com.bumptech.glide.GenericTransitionOptions
 
 class PostsActivity : AppCompatActivity() {
 
@@ -66,8 +72,22 @@ class PostsActivity : AppCompatActivity() {
             Handler().postDelayed({
                 updateUI(it.size)
             }, 1000)
-            adapter = GetPostsAdapter(this, GetPostsAdapter.OnClickListener { getPostModel ->
-
+            adapter = GetPostsAdapter(this, GetPostsAdapter.OnClickListener { getPostModel, image ->
+                val window = PopupWindow(this)
+                val popupView = layoutInflater.inflate(R.layout.layout_popup, null)
+                window.contentView = popupView
+                val popupImage = popupView.findViewById<AppCompatImageView>(R.id.popup_image)
+                val popupTitle = popupView.findViewById<AppCompatTextView>(R.id.popup_title)
+                val popupBody = popupView.findViewById<AppCompatTextView>(R.id.popup_body)
+                val popupClose = popupView.findViewById<AppCompatImageView>(R.id.popup_close)
+                GlideApp.with(this)
+                    .load(image)
+                    .transition(GenericTransitionOptions.with(android.R.anim.fade_in))
+                    .into(popupImage)
+                popupTitle.text = getPostModel.title
+                popupBody.text = getPostModel.body
+                popupClose.setOnClickListener { window.dismiss() }
+                window.showAtLocation(popupView, Gravity.CENTER, 0, 0)
             })
             adapter.submitList(it)
             binding.rvPosts.adapter = adapter

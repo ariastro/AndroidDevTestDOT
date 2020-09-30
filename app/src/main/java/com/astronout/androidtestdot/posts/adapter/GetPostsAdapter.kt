@@ -34,14 +34,16 @@ class GetPostsAdapter(private val context: Context, private val onClickListener:
         val getPostsModel = getItem(position)
         getPostsModel?.let { holder.bind(it) }
 
+        val image = images.random()
+
         GlideApp.with(context)
-            .load(images.random())
+            .load(image)
             .transition(GenericTransitionOptions.with(android.R.anim.fade_in))
             .into(holder.binding.imageviewBackground)
 
         holder.binding.itemLayout.setOnClickListener {
             if (getPostsModel != null) {
-                onClickListener.onClick(getPostsModel)
+                onClickListener.onClick(getPostsModel, image)
             }
         }
 
@@ -64,8 +66,8 @@ class GetPostsAdapter(private val context: Context, private val onClickListener:
         }
     }
 
-    class OnClickListener(val clickListener: (getPostsModel: GetPostsModel) -> Unit) {
-        fun onClick(getPostsModel: GetPostsModel) = clickListener(getPostsModel) }
+    class OnClickListener(val clickListener: (getPostsModel: GetPostsModel, image: Int) -> Unit) {
+        fun onClick(getPostsModel: GetPostsModel, image: Int) = clickListener(getPostsModel, image) }
 
     private companion object DiffCallback : DiffUtil.ItemCallback<GetPostsModel>() {
 
