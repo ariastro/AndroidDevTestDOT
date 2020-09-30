@@ -26,7 +26,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         usersLiveData = LivePagedListBuilder<Int, GetUsersModel>(dataSourceFactory, config).build()
     }
 
-    fun getPosts() = usersLiveData
+    fun getUsers() = usersLiveData
 
     fun refreshData() {
         dataSourceFactory.usersDataSourceLiveData.value?.invalidate()

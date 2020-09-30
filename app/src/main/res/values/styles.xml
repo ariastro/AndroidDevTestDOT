@@ -9,6 +9,7 @@
 
 	<style name="AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar">
 		<item name="android:fontFamily">@font/poppins</item>
+		<item name="colorControlNormal">@android:color/black</item>
 	</style>
 
 </resources>

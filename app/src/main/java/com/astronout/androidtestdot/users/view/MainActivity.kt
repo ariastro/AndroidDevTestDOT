@@ -1,5 +1,6 @@
 package com.astronout.androidtestdot.users.view
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -7,6 +8,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.astronout.androidtestdot.R
 import com.astronout.androidtestdot.baseview.BaseActivity
 import com.astronout.androidtestdot.databinding.ActivityMainBinding
+import com.astronout.androidtestdot.posts.view.PostsActivity
+import com.astronout.androidtestdot.posts.view.PostsActivity.Companion.EXTRA_ID
 import com.astronout.androidtestdot.users.adapter.GetUsersAdapter
 import com.astronout.androidtestdot.users.viewmodel.MainViewModel
 import com.astronout.androidtestdot.utils.*
@@ -27,6 +30,7 @@ class MainActivity : BaseActivity() {
 
         setSupportActionBar(binding.toolbar)
 
+        checkInternetConnection()
         setupSwipeRefreshLayout()
         observeLiveData()
 
@@ -44,14 +48,17 @@ class MainActivity : BaseActivity() {
 
     private fun setupSwipeRefreshLayout() {
         binding.swipeRefreshLayout.setOnRefreshListener {
+            binding.swipeRefreshLayout.isRefreshing = true
             checkInternetConnection()
         }
     }
 
     private fun observeLiveData() {
-        viewModel.getPosts().observe(this, Observer {
+        viewModel.getUsers().observe(this, Observer {
             adapter = GetUsersAdapter(this, GetUsersAdapter.OnClickListener { getUsersModel ->
-                showToast(getUsersModel.name)
+                val intent = Intent(this, PostsActivity::class.java)
+                intent.putExtra(EXTRA_ID, getUsersModel.id)
+                startActivity(intent)
             })
             adapter.submitList(it)
             binding.rvUsers.adapter = adapter
